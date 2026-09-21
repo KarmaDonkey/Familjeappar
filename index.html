@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Familjeappar</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#F4EFE6">
+<link rel="icon" href="icons/icon-32.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4EFE6;
+    --surface: #FFFFFF;
+    --ink: #2B241C;
+    --ink-soft: #5C5346;
+    --ink-faint: #9B9182;
+    --hairline: rgba(43, 36, 28, 0.12);
+    --shadow: rgba(43, 36, 28, 0.14);
+    --ledger: #96721C;
+    --shop: #B5677C;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1C1914;
+      --surface: #26221B;
+      --ink: #F2EEE4;
+      --ink-soft: #C9C1B3;
+      --ink-faint: #857C6C;
+      --hairline: rgba(242, 238, 228, 0.14);
+      --shadow: rgba(0, 0, 0, 0.4);
+      --ledger: #C9A227;
+      --shop: #D389A0;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1C1914;
+    --surface: #26221B;
+    --ink: #F2EEE4;
+    --ink-soft: #C9C1B3;
+    --ink-faint: #857C6C;
+    --hairline: rgba(242, 238, 228, 0.14);
+    --shadow: rgba(0, 0, 0, 0.4);
+    --ledger: #C9A227;
+    --shop: #D389A0;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: max(28px, env(safe-area-inset-top)) 20px max(28px, env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+  }
+  h1 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 700;
+    font-size: 30px;
+    margin: 8px 0 4px;
+  }
+  .lede {
+    color: var(--ink-soft);
+    font-size: 15px;
+    margin: 0 0 28px;
+  }
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+  }
+  .card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 20px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 2px 10px var(--shadow);
+    border-left: 6px solid var(--card-color);
+    transition: transform 0.08s ease;
+  }
+  .card:active { transform: scale(0.98); }
+  .card-glyph {
+    flex: 0 0 auto;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: var(--card-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+  }
+  .card-text { flex: 1 1 auto; min-width: 0; }
+  .card-title {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 600;
+    font-size: 20px;
+    margin: 0 0 2px;
+  }
+  .card-sub {
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    margin: 0;
+  }
+  .card-arrow {
+    flex: 0 0 auto;
+    color: var(--ink-faint);
+    font-size: 20px;
+  }
+  .app-version {
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 28px;
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+</style>
+</head>
+<body>
+  <h1>Familjeappar</h1>
+  <p class="lede">Välj vilken app du vill öppna.</p>
+
+  <div class="cards">
+    <a class="card" href="https://karmadonkey.github.io/Ledger/" style="--card-color: var(--ledger);">
+      <div class="card-glyph">💰</div>
+      <div class="card-text">
+        <p class="card-title">Hushållsbudget</p>
+        <p class="card-sub">Håll koll på utgifter</p>
+      </div>
+      <div class="card-arrow">›</div>
+    </a>
+
+    <a class="card" href="https://karmadonkey.github.io/Shoppinglist/" style="--card-color: var(--shop);">
+      <div class="card-glyph">🛒</div>
+      <div class="card-text">
+        <p class="card-title">Shoppinglista</p>
+        <p class="card-sub">Handla tillsammans</p>
+      </div>
+      <div class="card-arrow">›</div>
+    </a>
+  </div>
+
+  <div class="app-version">Familjeappar v1.0</div>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  }
+</script>
+</body>
+</html>
