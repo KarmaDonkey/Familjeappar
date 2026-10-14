@@ -75,7 +75,6 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    flex: 1;
   }
   .card {
     display: flex;
@@ -126,6 +125,27 @@
     margin-top: 28px;
     font-family: 'IBM Plex Mono', ui-monospace, monospace;
   }
+  .share-box {
+    margin-top: 16px;
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 10px var(--shadow);
+    text-align: center;
+  }
+  .share-title {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 600;
+    font-size: 17px;
+    margin: 0 0 4px;
+  }
+  .share-sub {
+    color: var(--ink-soft);
+    font-size: 13px;
+    margin: 0 0 14px;
+  }
+  .share-qr-wrap { display: flex; justify-content: center; }
+  .share-qr-wrap canvas { border-radius: 10px; }
 </style>
 </head>
 <body>
@@ -152,7 +172,13 @@
     </a>
   </div>
 
-  <div class="app-version">Familjeappar v1.0</div>
+  <div class="share-box">
+    <p class="share-title">Dela Familjeappar</p>
+    <p class="share-sub">Skanna med en annan iPhones kamera, öppna länken i Safari, och välj "Lägg till på hemskärmen".</p>
+    <div class="share-qr-wrap" id="shareQrWrap"></div>
+  </div>
+
+  <div class="app-version">Familjeappar v1.1</div>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -160,6 +186,23 @@
       navigator.serviceWorker.register('sw.js').catch(function () {});
     });
   }
+
+  (function () {
+    var wrap = document.getElementById('shareQrWrap');
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/qrcode@1/build/qrcode.min.js';
+    s.onload = function () {
+      var canvas = document.createElement('canvas');
+      wrap.appendChild(canvas);
+      window.QRCode.toCanvas(canvas, 'https://karmadonkey.github.io/Familjeappar/', { width: 200, margin: 1 }, function (err) {
+        if (err) wrap.textContent = 'Kunde inte rita QR-koden.';
+      });
+    };
+    s.onerror = function () {
+      wrap.textContent = 'Kunde inte ladda QR-biblioteket (kolla internetanslutningen).';
+    };
+    document.head.appendChild(s);
+  })();
 </script>
 </body>
 </html>
