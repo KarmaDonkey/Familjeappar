@@ -125,14 +125,30 @@
     margin-top: 28px;
     font-family: 'IBM Plex Mono', ui-monospace, monospace;
   }
-  .share-box {
+  .share-toggle {
+    display: block;
+    width: 100%;
     margin-top: 16px;
+    background: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    padding: 14px;
+    color: var(--ink-soft);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .share-toggle:active { background: var(--surface); }
+  .share-box {
+    margin-top: 10px;
     background: var(--surface);
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0 2px 10px var(--shadow);
     text-align: center;
   }
+  .share-box[hidden] { display: none; }
   .share-title {
     font-family: 'Source Serif 4', Georgia, serif;
     font-weight: 600;
@@ -172,13 +188,13 @@
     </a>
   </div>
 
-  <div class="share-box">
-    <p class="share-title">Dela Familjeappar</p>
+  <button type="button" class="share-toggle" id="shareToggleBtn">Dela Familjeappar</button>
+  <div class="share-box" id="shareBox" hidden>
     <p class="share-sub">Skanna med en annan iPhones kamera, öppna länken i Safari, och välj "Lägg till på hemskärmen".</p>
     <div class="share-qr-wrap" id="shareQrWrap"></div>
   </div>
 
-  <div class="app-version">Familjeappar v1.1</div>
+  <div class="app-version">Familjeappar v1.2</div>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -188,20 +204,35 @@
   }
 
   (function () {
+    var toggleBtn = document.getElementById('shareToggleBtn');
+    var box = document.getElementById('shareBox');
     var wrap = document.getElementById('shareQrWrap');
-    var s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/qrcode@1/build/qrcode.min.js';
-    s.onload = function () {
-      var canvas = document.createElement('canvas');
-      wrap.appendChild(canvas);
-      window.QRCode.toCanvas(canvas, 'https://karmadonkey.github.io/Familjeappar/', { width: 200, margin: 1 }, function (err) {
-        if (err) wrap.textContent = 'Kunde inte rita QR-koden.';
-      });
-    };
-    s.onerror = function () {
-      wrap.textContent = 'Kunde inte ladda QR-biblioteket (kolla internetanslutningen).';
-    };
-    document.head.appendChild(s);
+    var drawn = false;
+
+    function drawQr() {
+      if (drawn) return;
+      drawn = true;
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/qrcode@1/build/qrcode.min.js';
+      s.onload = function () {
+        var canvas = document.createElement('canvas');
+        wrap.appendChild(canvas);
+        window.QRCode.toCanvas(canvas, 'https://karmadonkey.github.io/Familjeappar/', { width: 200, margin: 1 }, function (err) {
+          if (err) wrap.textContent = 'Kunde inte rita QR-koden.';
+        });
+      };
+      s.onerror = function () {
+        wrap.textContent = 'Kunde inte ladda QR-biblioteket (kolla internetanslutningen).';
+      };
+      document.head.appendChild(s);
+    }
+
+    toggleBtn.addEventListener('click', function () {
+      var opening = box.hidden;
+      box.hidden = !opening;
+      toggleBtn.textContent = opening ? 'Dölj QR-kod' : 'Dela Familjeappar';
+      if (opening) drawQr();
+    });
   })();
 </script>
 </body>
